@@ -9,13 +9,7 @@ pipeline {
     }
 
     stages {
-        stage('git-checkout') {
-            steps {
-                git 'https://github.com/jaiswaladi246/secretsanta-generator.git'
-            }
-        }
-
-        stage('Code-Compile') {
+	    stage('Code-Compile') {
             steps {
                sh "mvn clean compile"
             }
@@ -37,7 +31,7 @@ pipeline {
 
         stage('Sonar Analysis') {
             steps {
-               withSonarQubeEnv('sonar'){
+               withSonarQubeEnv('sonar-server'){
                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Santa \
                    -Dsonar.java.binaries=. \
                    -Dsonar.projectKey=Santa '''
@@ -55,7 +49,7 @@ pipeline {
          stage('Docker Build') {
             steps {
                script{
-                   withDockerRegistry(credentialsId: 'docker-cred') {
+                   withDockerRegistry(credentialsId: 'docker') {
                     sh "docker build -t  santa123 . "
                  }
                }
@@ -65,9 +59,9 @@ pipeline {
         stage('Docker Push') {
             steps {
                script{
-                   withDockerRegistry(credentialsId: 'docker-cred') {
-                    sh "docker tag santa123 adijaiswal/santa123:latest"
-                    sh "docker push adijaiswal/santa123:latest"
+                   withDockerRegistry(credentialsId: 'docker') {
+                    sh "docker tag santa123 swamy1047/santa123:latest"
+                    sh "docker push swamy1047/santa123:latest"
                  }
                }
             }
@@ -76,7 +70,7 @@ pipeline {
         	 
         stage('Docker Image Scan') {
             steps {
-               sh "trivy image adijaiswal/santa123:latest "
+               sh "trivy image swamy1047/santa123:latest "
             }
         }}
         
@@ -91,7 +85,7 @@ pipeline {
                                     <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
                                 </body>
                             </html>''',
-                    to: 'jaiswaladi246@gmail.com',
+                    to: 'madapati.swamy@gmail.com',
                     from: 'jenkins@example.com',
                     replyTo: 'jenkins@example.com',
                     mimeType: 'text/html'
