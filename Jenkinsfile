@@ -65,6 +65,16 @@ pipeline {
                  }
                }
             }
+	    stage('Deploy Application') {
+            steps {
+               script{
+                   withDockerRegistry(credentialsId: 'docker') {
+                    sh "docker run -d --name santa -p 8090:8080 santa123:latst"
+                 }
+               }
+            }
+        }
+		
         }
         
         	 
@@ -72,7 +82,9 @@ pipeline {
             steps {
                sh "trivy image swamy1047/santa123:latest "
             }
-        }}
+        }
+    
+    }
         
          post {
             always {
