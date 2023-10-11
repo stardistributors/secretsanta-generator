@@ -77,7 +77,7 @@ pipeline {
             steps {
                script{
                    withDockerRegistry(credentialsId: 'docker') {
-                    sh "docker run -d --name santa1047 -p 8090:8080 santa123:latst"
+                    sh "docker run -d --name santa1047 -p 8090:8080 santa123:latest"
                  }
                }
             }
