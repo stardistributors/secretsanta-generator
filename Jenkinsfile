@@ -66,39 +66,27 @@ pipeline {
             steps {
                script{
                    withDockerRegistry(credentialsId: 'docker-cred') {
-                    sh "docker tag santa123 adijaiswal/santa123:latest"
-                    sh "docker push adijaiswal/santa123:latest"
+                    sh "docker tag santa123 snreddyboggu/santa123:latest"
+                    sh "docker push snreddyboggu/santa123:latest"
+                 
                  }
                }
             }
         }
         
         	 
-        stage('Docker Image Scan') {
-            steps {
-               sh "trivy image adijaiswal/santa123:latest "
-            }
-        }}
+      
         
-         post {
-            always {
-                emailext (
-                    subject: "Pipeline Status: ${BUILD_NUMBER}",
-                    body: '''<html>
-                                <body>
-                                    <p>Build Status: ${BUILD_STATUS}</p>
-                                    <p>Build Number: ${BUILD_NUMBER}</p>
-                                    <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
-                                </body>
-                            </html>''',
-                    to: 'jaiswaladi246@gmail.com',
-                    from: 'jenkins@example.com',
-                    replyTo: 'jenkins@example.com',
-                    mimeType: 'text/html'
-                )
+          stage('Docker deploy') {
+            steps {
+               script{
+                   withDockerRegistry(credentialsId: 'docker-cred') {
+                  
+                    sh "docker run -d -p 8081:8000 snreddyboggu/dotnet-demoapp"
+                 }
+               }
             }
         }
-		
 		
 
     
