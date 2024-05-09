@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: santa
-  replicas: 2 # Number of replicas that will be created for this deployment
+  replicas: 1 # Number of replicas that will be created for this deployment
   template:
     metadata:
       labels:
@@ -14,10 +14,17 @@ spec:
     spec:
       containers:
         - name: santa
-          image: adijaiswal/santa:latest # Image that will be used to containers in the cluster
+          image: aziz27uk/santa:latest # Image that will be used to containers in the cluster
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080 # The port that the container is running on in the cluster
+            - containerPort: 8070 # The port that the container is running on in the cluster
+            resources:
+              requests:
+                memory: "1Gi"
+                cpu: "1000m"
+              Limits:
+                memory: "1Gi"
+                cpu: "1Gi"
 
 
 ---
@@ -31,6 +38,6 @@ spec:
     app: santa
   ports:
     - protocol: "TCP"
-      port: 8080 # The port that the service is running on in the cluster
-      targetPort: 8080 # The port exposed by the service
+      port: 8070 # The port that the service is running on in the cluster
+      targetPort: 8070 # The port exposed by the service
   type: LoadBalancer # type of the service.
