@@ -1,41 +1,40 @@
 apiVersion: apps/v1
-kind: Deployment # Kubernetes resource kind we are creating
+kind: Deployment
 metadata:
-  name: santa-deployment
+  name: spring-boot-k8s-deployment
 spec:
   selector:
     matchLabels:
-      app: santa
-  replicas: 1 # Number of replicas that will be created for this deployment
+      app: spring-boot-k8s
+  replicas: 1
   template:
     metadata:
       labels:
-        app: santa
+        app: spring-boot-k8s
     spec:
       containers:
-        - name: santa
-          image: aziz27uk/santa:latest # Image that will be used to containers in the cluster
+        - name: spring-boot-k8s
+          image: aziz27uk/santa:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080 # The port that the container is running on in the cluster
-            resources:
-              requests:
-                memory: "1Gi"
-                cpu: "1000m"
-              Limits:
-                memory: "1Gi"
-                cpu: "1Gi"
-
-
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "1Gi" 
+              cpu: "1000m"      
+            limits:
+              memory: "1Gi" 
+              cpu: "1000m"      
+              
 ---
 
 apiVersion: v1 # Kubernetes API version
 kind: Service # Kubernetes resource kind we are creating
 metadata: # Metadata of the resource kind we are creating
-  name: santa-ssvc
+  name: springboot-k8ssvc
 spec:
   selector:
-    app: santa
+    app: spring-boot-k8s
   ports:
     - protocol: "TCP"
       port: 8080 # The port that the service is running on in the cluster
